@@ -1,0 +1,2 @@
+﻿model,setting,preference_accuracy_n,preference_accuracy,n_correct,n_wrong,majority_class_label,majority_class_baseline_accuracy,diverging_id_n,diverging_id_auroc,mean_gap_diverging,mean_gap_high_agreement,median_gap_diverging,median_gap_high_agreement
+Skywork-Reward-Llama-3.1-8B-v0.2,"4-bit inference, no training",100,0.75,75,25,B,0.66,100,0.6244,10.131574096679687,14.65998046875,7.3623046875,11.988525390625
