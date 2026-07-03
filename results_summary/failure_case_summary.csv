@@ -1,0 +1,7 @@
+﻿scenario_manual,failure_strength,count
+factuality_instruction,strong_failure,1
+safety_refusal,weak_failure,2
+technical_medical,strong_failure,1
+technical_medical,weak_failure,3
+verbosity_concision,strong_failure,3
+verbosity_concision,weak_failure,1

@@ -1,0 +1,12 @@
+﻿comparison_id,scenario_manual,failure_strength,score_gap_abs,model_pred,majority_label,n_A,n_B,n_Tie,balanced_disagreement,high_confidence_wrong
+a0e2fecabf19408494dcdc8da4e6b5eb,factuality_instruction,strong_failure,39.203125,B,B,1,2,1,True,False
+c959dbb952b643d4a481216b988fd26b,technical_medical,strong_failure,29.6611328125,A,A,2,1,1,True,False
+d34662590aee45d9a5c327c530b83c18,verbosity_concision,strong_failure,20.529296875,B,Ambiguous,2,2,0,True,False
+fa2898880d4445fcb618dc072a6b49da,verbosity_concision,strong_failure,17.734375,B,A,3,1,0,False,True
+3141b1cd47c7455596b92fe2bab99c7a,verbosity_concision,strong_failure,17.59375,B,B,1,2,1,True,False
+f1d59f78b1a047a2a4e75e9cfb2835b1,technical_medical,weak_failure,37.2734375,B,B,1,3,0,False,False
+b4e156c7d30f493684980110669bea32,technical_medical,weak_failure,29.3203125,B,B,1,3,0,False,False
+d32ab139f0e64f978dbbbf27d55b30fd,safety_refusal,weak_failure,21.466796875,B,B,1,3,0,False,False
+b615a0740d0646c69a0801b0fe62e7e4,safety_refusal,weak_failure,20.79296875,B,B,1,3,0,False,False
+a8610382d64c4cd5a3c163f50670112e,verbosity_concision,weak_failure,19.1630859375,B,B,1,3,0,False,False
+d1f2151b85cb4c2fa11c3ecff804e703,technical_medical,weak_failure,17.28125,B,B,1,3,0,False,False
