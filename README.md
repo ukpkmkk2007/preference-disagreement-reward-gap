@@ -1,183 +1,222 @@
-# Preference Pair Quality Diagnostics
+# Task-Conditioned Reward-Gap Diagnostics for Human Preference Disagreement
 
-This repository contains a compute-constrained research project on preference disagreement and reward-gap diagnostics in human feedback datasets.
+This repository studies whether the absolute score gap produced by a scalar reward model can identify preference pairs on which human annotators disagree, and whether that diagnostic signal changes across task scenarios.
 
-The project starts from a small-scale reproduction of a reward-model baseline on MultiPref and extends it into a scenario-conditioned failure analysis of when reward gap fails as a diagnostic signal for human preference disagreement.
-
-## Motivation
-
-Preference pairs are often treated as clean A/B comparison samples. However, human annotators may disagree for reasons such as response verbosity, formatting, safety behavior, factuality, instruction following, task ambiguity, or different preferences for tone and detail.
-
-This project treats disagreement not simply as noise, but as a signal that may reveal ambiguity, multidimensional preferences, or limitations of single-value reward models.
+The project began as a small reproduction of the reward-gap baseline from *Diverging Preferences: When do Annotators Disagree and do Models Know?* and was extended into a task-conditioned empirical analysis using two scalar reward models.
 
 ## Research Questions
 
-1. Can a single-value reward model recover the human majority preference on MultiPref-style preference pairs?
-2. Can the absolute reward gap between two responses identify cases where human annotators disagree?
-3. Does the reliability of reward-gap-based disagreement detection vary across task scenarios?
-4. Which scenarios produce overconfident disagreement failures, where humans disagree but the reward model assigns a large score gap?
+1. Can a scalar reward model recover the human majority preference?
+2. Can a small absolute reward gap identify examples with human preference disagreement?
+3. Does disagreement-detection performance vary across task scenarios?
+4. Does the relative performance of different reward models change across tasks?
+5. How often do reward models assign a large score gap to examples on which humans disagree?
 
-## Project Overview
+## Scope of the Contribution
 
-### Part 1: Baseline Reproduction
+The use of absolute reward gap as a disagreement signal is not introduced by this repository. The main empirical extension is to examine its reliability by task scenario and by reward-model checkpoint.
 
-I reproduce a small-scale version of the single-value reward model baseline evaluation pipeline from *Diverging Preferences: When do Annotators Disagree and do Models Know?*
+The current evidence should be interpreted as a pilot study rather than a definitive benchmark result.
 
-The baseline evaluates:
-
-- **Preference Accuracy**: whether the reward model prefers the same response as the human majority.
-- **Diverging ID AUROC**: whether the model's reward gap can identify preference pairs where annotators disagree.
-
-Due to local compute constraints, this is not a full reproduction of the original paper's large-model results.
-
-### Part 2: Scenario-conditioned Failure Analysis
-
-Based on the baseline results, I further analyze whether reward-gap reliability varies across task scenarios.
-
-The pilot study focuses on overconfident disagreement cases, where human annotators disagree but the reward model still assigns a large absolute score gap between two responses.
-
-## Data and Model
+## Data
 
 - Dataset: MultiPref
-- Reward model: `Skywork-Reward-Llama-3.1-8B-v0.2`
-- Inference: 4-bit quantized inference
-- Training: no model training
-- Evaluation scale: small sampled subsets under local GPU constraints
-- Length filter: long examples are filtered for local feasibility
+- Formal sample size: 400 preference pairs
+- Diverging examples: 200
+- High-agreement examples: 200
+- Task scenarios:
+  - Open QA: 80
+  - Generation: 70
+  - Coding: 70
+  - Chat: 70
+  - Brainstorm: 70
+  - Closed QA: 40
 
-This repository does not include raw MultiPref prompts, raw responses, or model weights.
+The repository does not redistribute raw prompts, raw responses, or model weights.
 
-## Baseline Results
+## Reward Models
 
-On a 100-example subset with clear human majority preferences:
+- `Skywork/Skywork-Reward-Llama-3.1-8B-v0.2`
+- `sfairXC/FsfairX-LLaMA3-RM-v0.1`
 
-| Metric | Value |
-|---|---:|
-| Preference Accuracy | 0.7500 |
-| Majority-class baseline | 0.6600 |
+No reward model is trained in this project. The models are used only for inference.
 
-For Diverging ID, I compare paper-like diverging examples against high-agreement examples using:
+## Core Definitions
+
+For each preference pair:
 
 ```text
-diverging_score = -abs(score_a - score_b)
+reward_gap = abs(score_a - score_b)
+diverging_score = -reward_gap
 ```
 
-| Metric | Value |
+A smaller reward gap is treated as stronger evidence that the model considers the two responses difficult to distinguish.
+
+### Preference Accuracy
+
+Preference accuracy is computed only for examples with a strict human majority:
+
+```text
+human_label = A, if n_A > n_B
+human_label = B, if n_B > n_A
+```
+
+Examples with `n_A == n_B` are excluded from preference-accuracy calculations.
+
+### Disagreement Detection
+
+Diverging-ID AUROC evaluates whether `-abs(score_a - score_b)` separates diverging examples from high-agreement examples.
+
+## Main Results
+
+### Overall disagreement detection
+
+| Reward model | AUROC | 95% bootstrap CI |
+|---|---:|---:|
+| Skywork 8B | 0.602 | [0.550, 0.656] |
+| FsfairX 8B | 0.630 | [0.578, 0.683] |
+
+The paired overall AUROC difference was 0.028 in favor of FsfairX, but its bootstrap confidence interval included zero.
+
+### Task-specific AUROC
+
+| Task scenario | Skywork 8B | FsfairX 8B |
+|---|---:|---:|
+| Open QA | 0.737 | 0.759 |
+| Generation | 0.560 | 0.564 |
+| Coding | 0.537 | 0.669 |
+| Chat | 0.537 | 0.556 |
+| Brainstorm | 0.648 | 0.705 |
+| Closed QA | 0.580 | 0.423 |
+
+The results suggest substantial task dependence. In particular, the relative ordering of the two models differs between Coding and Closed QA. Because category sample sizes are limited, these task-level results require validation on additional models and datasets.
+
+### Preference accuracy
+
+There were 344 examples with a strict human majority and 56 without a strict majority.
+
+| Reward model | Overall preference accuracy |
 |---|---:|
-| Diverging ID AUROC | 0.6244 |
-| Mean gap, diverging examples | 10.1316 |
-| Mean gap, high-agreement examples | 14.6600 |
+| Skywork 8B | 0.703 |
+| FsfairX 8B | 0.782 |
 
-These results suggest that reward gap contains a weak-to-moderate signal for identifying human preference disagreement, but the signal is limited.
+Preference accuracy was lower on diverging examples than on high-agreement examples for both models.
 
-## Scenario-conditioned Failure Analysis
+### Operational high-gap disagreement rate
 
-In the second part of the project, I manually label the 100-example pilot set by task scenario and analyze where reward gap becomes unreliable.
+A model-specific threshold was defined as the 75th percentile of the absolute reward-gap distribution among high-agreement examples. Among diverging examples:
 
-Scenario labels include:
+| Reward model | High-gap disagreement rate | Wilson 95% CI |
+|---|---:|---:|
+| Skywork 8B | 0.125 | [0.086, 0.178] |
+| FsfairX 8B | 0.100 | [0.066, 0.149] |
 
-- safety/refusal
-- technical or expert-advice
-- factuality/instruction-following
-- format/style
-- task ambiguity
-- verbosity/concision
-- other
+This is an operational diagnostic, not a calibrated probability of model confidence.
 
-Preliminary results suggest that reward-gap reliability is scenario-dependent. In this small pilot, overconfident disagreement failures are more concentrated in **verbosity/concision** and **technical/expert-advice** scenarios.
+## Figures
 
-This result should be interpreted as exploratory rather than conclusive, because the current pilot uses only 100 examples and one reward model.
+![Overall AUROC with bootstrap confidence intervals](figures/formal_sample_v1_overall_auroc_ci.png)
+
+![Task-specific disagreement-detection AUROC](figures/formal_sample_v1_category_auroc.png)
+
+![Preference accuracy](figures/formal_sample_v1_preference_accuracy.png)
+
+![Operational high-gap disagreement rate](figures/formal_sample_v1_overconfident_disagreement_rate.png)
 
 ## Repository Structure
 
 ```text
-docs/
-  baseline_reproduction_methodology.md
-  scenario_failure_methodology.md
-
-reports/
-  baseline_reproduction_report.md
-  case_study_annotation_report.md
-  scenario_conditioned_failure_analysis.md
-
-results_summary/
-  baseline_metrics.csv
-  broad_label_counts_by_type.csv
-  broad_label_counts_overall.csv
-  case_study_label_counts.csv
-  failure_case_summary.csv
-  scenario_pilot_summary.csv
-  strong_failure_cases_sanitized.csv
-
-scripts/
-  02_spyder_parse_multipref_labels.py
-  03_spyder_define_diverging.py
-  04_spyder_export_case_studies.py
-  05_spyder_create_features.py
-  06_prepare_skywork_baseline_inputs.py
-  10_score_skywork_8b_random100.py
-  11_skywork_8b_diverging_id_auroc.py
-  12_make_baseline_reproduction_report.py
-  13_make_case_study_annotation_report.py
-  14_make_advisor_summary.py
-  15_scenario_pilot_auto_label.py
-  16_extract_overconfident_diverging_cases.py
-  17_extract_strong_failure_cases.py
-  18_make_scenario_pilot_report.py
+.
+├── README.md
+├── requirements.txt
+├── .gitignore
+├── docs/
+│   ├── README.md
+│   ├── experiment_design.md
+│   ├── results_summary.md
+│   ├── reproducibility.md
+│   └── data_release_policy.md
+├── scripts/
+│   ├── 01_...
+│   ├── ...
+│   └── 40_build_primary_results_summary_and_figures_v1.py
+├── data_processed/
+│   ├── frozen sample IDs
+│   ├── frozen reward-model score tables
+│   ├── public analysis table
+│   └── manifests
+├── results/
+│   ├── AUROC tables
+│   ├── bootstrap summaries
+│   ├── preference-accuracy tables
+│   └── operational high-gap disagreement tables
+├── figures/
+│   └── final figures
+└── reports/
+    └── research reports and advisor-facing summaries
 ```
 
-## Reports
+## Reproduction
 
-- [Baseline reproduction report](reports/baseline_reproduction_report.md)
-- [Case study annotation report](reports/case_study_annotation_report.md)
-- [Scenario-conditioned failure analysis](reports/scenario_conditioned_failure_analysis.md)
+Install the project dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the formal-sample preparation, scoring, validation, and analysis scripts in numerical order. Scripts 32–40 operate on frozen score tables and do not require GPU inference.
+
+Detailed instructions are provided in:
+
+- [Experiment design](docs/experiment_design.md)
+- [Results summary](docs/results_summary.md)
+- [Reproducibility guide](docs/reproducibility.md)
+- [Data and release policy](docs/data_release_policy.md)
 
 ## Public Release Policy
 
-To keep the repository lightweight and avoid redistributing raw dataset content, this repository only releases scripts, reports, aggregate summaries, and sanitized failure-case metadata.
+This repository may release:
 
-Not included:
+- source code;
+- aggregate result tables;
+- figures;
+- frozen sample IDs;
+- reward-model score tables without prompt or response text;
+- compact public analysis tables without raw text;
+- integrity manifests.
+
+This repository does not release:
 
 - raw MultiPref data;
-- full prompt text;
+- full prompts;
 - full response A or response B text;
+- unsanitized annotation notes;
 - model weights;
-- unsanitized case-study CSV files.
+- access tokens;
+- local model caches.
 
-Released failure-case metadata may include fields such as:
-
-```text
-comparison_id
-scenario_manual
-failure_strength
-score_gap_abs
-model_pred
-majority_label
-n_A
-n_B
-n_Tie
-balanced_disagreement
-high_confidence_wrong
-```
+See [Data and release policy](docs/data_release_policy.md) for details.
 
 ## Limitations
 
-This is a small-scale exploratory project rather than a full benchmark reproduction or a new reward-model training method.
+1. The formal analysis uses one dataset and two reward models.
+2. The total sample size is 400, with smaller sample sizes within task scenarios.
+3. Category-level confidence intervals are wide for several tasks.
+4. Manual disagreement-source labels overlap and are exploratory.
+5. The analysis does not establish that reward gap is a calibrated uncertainty estimate.
+6. The current results do not establish a new reward-model training method.
+7. Task-level ranking reversals require replication before being treated as stable findings.
 
-Main limitations:
+## Planned Extensions
 
-1. The evaluation uses Skywork 8B rather than larger reward models.
-2. Inference is done with 4-bit quantization due to local GPU constraints.
-3. The current analysis uses small sampled subsets instead of full-scale MultiPref evaluation.
-4. Scenario labels are manually defined and should be validated on larger samples.
-5. Current results use one reward model and one dataset.
+- evaluate additional scalar reward models;
+- validate on a second multi-annotator preference dataset;
+- increase task-level sample sizes;
+- test whether model-by-task interactions replicate;
+- investigate which disagreement sources explain task-level differences;
+- evaluate simple task-aware diagnostics on held-out data.
 
-## Next Steps
+## Reference
 
-Potential extensions include:
-
-- expanding the sample size;
-- validating scenario labels more systematically;
-- comparing multiple reward models;
-- testing whether the same failure patterns appear on other preference datasets;
-- developing a more systematic taxonomy of reward-gap failure cases.
+- *Diverging Preferences: When do Annotators Disagree and do Models Know?*  
+  https://arxiv.org/abs/2410.14632

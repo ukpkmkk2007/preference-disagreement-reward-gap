@@ -1,0 +1,30 @@
+﻿analysis_family,scope,model,estimate,ci_lower,ci_upper,denominator_n,note
+AUROC,Overall,Skywork-Reward-Llama-3.1-8B-v0.2,0.60221250000000004,0.54952375,0.6560012499999999,400,Positive class=diverging; predictor=-absolute reward gap.
+AUROC,Overall,FsfairX-LLaMA3-RM-v0.1,0.63037500000000002,0.5779209375,0.6825021874999999,400,Positive class=diverging; predictor=-absolute reward gap.
+AUROC,Open QA,Skywork-Reward-Llama-3.1-8B-v0.2,0.73687499999999995,0.623109375,0.8400468749999997,80,Positive class=diverging; predictor=-absolute reward gap.
+AUROC,Open QA,FsfairX-LLaMA3-RM-v0.1,0.75875000000000004,0.6446796875,0.8568984374999999,80,Positive class=diverging; predictor=-absolute reward gap.
+AUROC,Generation,Skywork-Reward-Llama-3.1-8B-v0.2,0.56000000000000005,0.4253061224489795,0.6987959183673468,70,Positive class=diverging; predictor=-absolute reward gap.
+AUROC,Generation,FsfairX-LLaMA3-RM-v0.1,0.56408163265306122,0.4281530612244898,0.6946938775510204,70,Positive class=diverging; predictor=-absolute reward gap.
+AUROC,Coding,Skywork-Reward-Llama-3.1-8B-v0.2,0.53714285714285714,0.3926530612244898,0.6677551020408163,70,Positive class=diverging; predictor=-absolute reward gap.
+AUROC,Coding,FsfairX-LLaMA3-RM-v0.1,0.66857142857142837,0.5330510204081633,0.7922653061224488,70,Positive class=diverging; predictor=-absolute reward gap.
+AUROC,Chat,Skywork-Reward-Llama-3.1-8B-v0.2,0.53714285714285714,0.3958979591836734,0.6759183673469387,70,Positive class=diverging; predictor=-absolute reward gap.
+AUROC,Chat,FsfairX-LLaMA3-RM-v0.1,0.55591836734693867,0.4159081632653061,0.6906224489795918,70,Positive class=diverging; predictor=-absolute reward gap.
+AUROC,Brainstorm,Skywork-Reward-Llama-3.1-8B-v0.2,0.64816326530612234,0.5085714285714285,0.7764081632653057,70,Positive class=diverging; predictor=-absolute reward gap.
+AUROC,Brainstorm,FsfairX-LLaMA3-RM-v0.1,0.70489795918367337,0.5779183673469389,0.8147142857142856,70,Positive class=diverging; predictor=-absolute reward gap.
+AUROC,Closed QA,Skywork-Reward-Llama-3.1-8B-v0.2,0.57999999999999985,0.395,0.7625,40,Positive class=diverging; predictor=-absolute reward gap.
+AUROC,Closed QA,FsfairX-LLaMA3-RM-v0.1,0.42249999999999999,0.245,0.6149999999999998,40,Positive class=diverging; predictor=-absolute reward gap.
+Paired AUROC difference,Overall,FsfairX minus Skywork,0.028162499999999899,-0.0174406249999998,0.0749003124999998,,Positive values favor FsfairX.
+Paired AUROC difference,Open QA,FsfairX minus Skywork,0.021874999999999999,-0.0715703124999998,0.1050078124999998,,Positive values favor FsfairX.
+Paired AUROC difference,Generation,FsfairX minus Skywork,0.0040816326530611,-0.1167551020408163,0.134704081632653,,Positive values favor FsfairX.
+Paired AUROC difference,Coding,FsfairX minus Skywork,0.1314285714285712,0.0159081632653059,0.2612346938775508,,Positive values favor FsfairX.
+Paired AUROC difference,Chat,FsfairX minus Skywork,0.0187755102040815,-0.1232755102040816,0.1592142857142855,,Positive values favor FsfairX.
+Paired AUROC difference,Brainstorm,FsfairX minus Skywork,0.056734693877551,-0.0531020408163263,0.1632653061224488,,Positive values favor FsfairX.
+Paired AUROC difference,Closed QA,FsfairX minus Skywork,-0.15749999999999981,-0.3024999999999999,-0.005,,Positive values favor FsfairX.
+Preference accuracy,Overall,Skywork-Reward-Llama-3.1-8B-v0.2,0.70348837209302317,,,344,Rows without a strict human majority are excluded.
+Preference accuracy,Overall,FsfairX-LLaMA3-RM-v0.1,0.78197674418604635,,,344,Rows without a strict human majority are excluded.
+Preference accuracy,Diverging,Skywork-Reward-Llama-3.1-8B-v0.2,0.59027777777777768,,,144,Rows without a strict human majority are excluded.
+Preference accuracy,Diverging,FsfairX-LLaMA3-RM-v0.1,0.65972222222222221,,,144,Rows without a strict human majority are excluded.
+Preference accuracy,High-agreement,Skywork-Reward-Llama-3.1-8B-v0.2,0.78500000000000003,,,200,Rows without a strict human majority are excluded.
+Preference accuracy,High-agreement,FsfairX-LLaMA3-RM-v0.1,0.87,,,200,Rows without a strict human majority are excluded.
+Operational overconfident disagreement,All diverging,Skywork-Reward-Llama-3.1-8B-v0.2,0.125,0.0861197447571264,0.1780142500258234,200,Model-specific Q75 high-agreement gap threshold.
+Operational overconfident disagreement,All diverging,FsfairX-LLaMA3-RM-v0.1,0.10000000000000001,0.0656704486690958,0.1494058124327173,200,Model-specific Q75 high-agreement gap threshold.

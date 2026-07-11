@@ -1,0 +1,109 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+venv/
+env/
+rewardrm/
+.conda/
+conda-meta/
+
+# IDE and editor files
+.spyproject/
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+*~
+~$*
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment variables, credentials, and tokens
+.env
+.env.*
+*.key
+*.pem
+*token*
+credentials.json
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+*.old
+tmp/
+temp/
+
+# Hugging Face and model caches
+.cache/
+huggingface/
+hf_cache/
+models--*/
+snapshots/
+blobs/
+refs/
+
+# Model weights and large checkpoints
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.gguf
+
+# Raw, private, or redistributable dataset content
+data_raw/
+data_private/
+data_interim/
+raw_data/
+private_data/
+
+# Full-text or unsanitized processed tables
+data_processed/*_full.csv
+data_processed/*_private.csv
+data_processed/*with_text*.csv
+data_processed/*raw_text*.csv
+data_processed/*unsanitized*.csv
+data_processed/formal_sample_v1_stratified_annotation_frozen.csv
+data_processed/formal_sample_v1_two_rm_labeled_analysis_table.csv
+
+# Local model-scoring intermediates
+outputs/
+checkpoints/
+wandb/
+runs/
+
+# Optional large bootstrap replicate files
+results/*bootstrap*replicates*.csv
+
+# Compressed local archives
+*.7z
+*.rar
+*.tar
+*.tar.gz
+
+# Keep repository-facing documentation and public artifacts
+!docs/
+!docs/**
+!figures/
+!figures/**
+!reports/
+!reports/**
+!results/
+!results/**
+!scripts/
+!scripts/**

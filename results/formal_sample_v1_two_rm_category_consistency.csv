@@ -1,0 +1,2 @@
+﻿n_categories,pearson_correlation_of_category_aurocs,pearson_p_value_exploratory,spearman_correlation_of_category_aurocs,spearman_p_value_exploratory,n_categories_fsfairx_higher_observed,n_categories_skywork_higher_observed,n_categories_equal_observed,n_category_difference_cis_excluding_zero,category_scope_order,interpretation_note
+6,0.62871625981632262,0.18118639184884103,0.55078248386982598,0.25736933162257458,5,1,0,2,Open QA | Generation | Coding | Chat | Brainstorm | Closed QA,Cross-category correlations use only six categories and are exploratory.

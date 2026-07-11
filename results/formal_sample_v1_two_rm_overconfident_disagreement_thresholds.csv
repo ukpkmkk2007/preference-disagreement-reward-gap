@@ -1,0 +1,7 @@
+﻿model,model_short_name,threshold_role,reference_quantile,threshold_gap,quantile_method,comparison_operator,n_high_agreement_reference,n_high_agreement_at_or_above_threshold,high_agreement_reference_exceedance_rate,threshold_interpretation
+Skywork-Reward-Llama-3.1-8B-v0.2,skywork,sensitivity_q50,0.5,8.1064453125,linear,gap >= threshold,200,100,0.5,model-specific empirical reward-gap quantile among high-agreement samples
+Skywork-Reward-Llama-3.1-8B-v0.2,skywork,primary_q75,0.75,14.91912841796875,linear,gap >= threshold,200,50,0.25,model-specific empirical reward-gap quantile among high-agreement samples
+Skywork-Reward-Llama-3.1-8B-v0.2,skywork,sensitivity_q90,0.90000000000000002,24.723730468749999,linear,gap >= threshold,200,20,0.10000000000000001,model-specific empirical reward-gap quantile among high-agreement samples
+FsfairX-LLaMA3-RM-v0.1,fsfairx,sensitivity_q50,0.5,2.87890625,linear,gap >= threshold,200,100,0.5,model-specific empirical reward-gap quantile among high-agreement samples
+FsfairX-LLaMA3-RM-v0.1,fsfairx,primary_q75,0.75,5.428955078125,linear,gap >= threshold,200,50,0.25,model-specific empirical reward-gap quantile among high-agreement samples
+FsfairX-LLaMA3-RM-v0.1,fsfairx,sensitivity_q90,0.90000000000000002,7.3484374999999993,linear,gap >= threshold,200,20,0.10000000000000001,model-specific empirical reward-gap quantile among high-agreement samples
