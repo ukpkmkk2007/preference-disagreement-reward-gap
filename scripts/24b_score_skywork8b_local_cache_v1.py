@@ -38,8 +38,11 @@ from transformers import (
 # =========================
 
 PROJECT_DIR = Path(
-    r"C:\Users\23624\Desktop\preference_disagreement_baseline"
-)
+    os.environ.get(
+        "PREFERENCE_DISAGREEMENT_PROJECT_DIR",
+        Path(__file__).resolve().parents[1],
+    )
+).expanduser().resolve()
 
 FROZEN_INPUT_PATH = (
     PROJECT_DIR
@@ -89,6 +92,14 @@ OVERWRITE_FINAL = False
 # =========================
 # 1. Utility functions
 # =========================
+
+def repository_path(path: Path) -> str:
+    """Return a repository-relative path for manifests when possible."""
+    try:
+        return path.resolve().relative_to(PROJECT_DIR).as_posix()
+    except ValueError:
+        return str(path).replace(str(Path.home()), "~")
+
 
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
@@ -543,11 +554,11 @@ scoring_manifest = pd.DataFrame(
     [
         {
             "model_name": "Skywork/Skywork-Reward-Llama-3.1-8B-v0.2",
-            "local_model_snapshot": str(MODEL_NAME),
+            "local_model_snapshot": repository_path(MODEL_NAME),
             "inference_mode": "4-bit NF4, no training",
-            "input_file": str(FROZEN_INPUT_PATH),
+            "input_file": repository_path(FROZEN_INPUT_PATH),
             "input_sha256": actual_frozen_hash,
-            "output_file": str(FINAL_OUTPUT_PATH),
+            "output_file": repository_path(FINAL_OUTPUT_PATH),
             "output_sha256": final_score_hash,
             "n_expected": EXPECTED_ROWS,
             "n_scored": len(result_df),

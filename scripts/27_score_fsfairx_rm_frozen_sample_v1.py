@@ -48,8 +48,11 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 # =========================
 
 PROJECT_DIR = Path(
-    r"C:\Users\23624\Desktop\preference_disagreement_baseline"
-)
+    os.environ.get(
+        "PREFERENCE_DISAGREEMENT_PROJECT_DIR",
+        Path(__file__).resolve().parents[1],
+    )
+).expanduser().resolve()
 
 FROZEN_INPUT_PATH = (
     PROJECT_DIR
@@ -132,6 +135,14 @@ SCORE_COLUMNS = [
 # =========================
 # 1. Utility functions
 # =========================
+
+def repository_path(path: Path) -> str:
+    """Return a repository-relative path for manifests when possible."""
+    try:
+        return path.resolve().relative_to(PROJECT_DIR).as_posix()
+    except ValueError:
+        return str(path).replace(str(Path.home()), "~")
+
 
 def sha256_file(path: Path) -> str:
     """Return the SHA-256 digest of a file."""
@@ -741,11 +752,11 @@ scoring_manifest = pd.DataFrame(
         {
             "model_name": MODEL_REPO_ID,
             "model_revision": MODEL_REVISION,
-            "local_model_snapshot": str(MODEL_DIR),
+            "local_model_snapshot": repository_path(MODEL_DIR),
             "inference_mode": "BF16, no training",
-            "input_file": str(FROZEN_INPUT_PATH),
+            "input_file": repository_path(FROZEN_INPUT_PATH),
             "input_sha256": actual_frozen_hash,
-            "output_file": str(FINAL_OUTPUT_PATH),
+            "output_file": repository_path(FINAL_OUTPUT_PATH),
             "output_sha256": final_score_hash,
             "n_expected": EXPECTED_ROWS,
             "n_scored": len(result_df),
